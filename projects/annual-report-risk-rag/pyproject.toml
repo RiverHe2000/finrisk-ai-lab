@@ -1,0 +1,29 @@
+[project]
+name = "annual-report-risk-rag"
+version = "0.1.0"
+description = "Hybrid-retrieval RAG pipeline that extracts prudential risk metrics from bank annual reports with Claude, grounds every value in cited evidence, and evaluates itself against gold labels."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "anthropic>=0.69",
+    "numpy>=1.26",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "typer>=0.15",
+    "rich>=13.9",
+]
+
+[project.optional-dependencies]
+pdf = ["pypdf>=5.1"]
+dense = ["sentence-transformers>=3.3"]
+
+[project.scripts]
+report-rag = "report_rag.cli:app"
+
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/report_rag"]

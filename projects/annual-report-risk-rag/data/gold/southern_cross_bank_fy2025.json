@@ -1,0 +1,17 @@
+{
+  "doc_id": "southern_cross_bank_fy2025",
+  "labels": [
+    {"metric_id": "cet1_ratio", "value": 12.4, "unit": "percent", "period": "FY2025", "evidence_section": "Capital management"},
+    {"metric_id": "tier1_ratio", "value": 14.2, "unit": "percent", "period": "FY2025", "evidence_section": "Capital management"},
+    {"metric_id": "total_capital_ratio", "value": 18.9, "unit": "percent", "period": "FY2025", "evidence_section": "Capital management"},
+    {"metric_id": "leverage_ratio", "value": 5.3, "unit": "percent", "period": "FY2025", "evidence_section": "Capital management"},
+    {"metric_id": "lcr", "value": 134, "unit": "percent", "period": "FY2025", "evidence_section": "Funding and liquidity"},
+    {"metric_id": "nsfr", "value": 121, "unit": "percent", "period": "FY2025", "evidence_section": "Funding and liquidity"},
+    {"metric_id": "rwa_total", "value": 215640, "unit": "aud_m", "period": "FY2025", "evidence_section": "Capital management"},
+    {"metric_id": "npl_ratio", "value": 0.94, "unit": "percent", "period": "FY2025", "evidence_section": "Credit quality"},
+    {"metric_id": "provision_coverage", "value": 1.58, "unit": "percent", "period": "FY2025", "evidence_section": "Credit quality"},
+    {"metric_id": "loan_impairment_expense", "value": 612, "unit": "aud_m", "period": "FY2025", "evidence_section": "Credit quality"},
+    {"metric_id": "stage3_ecl", "value": 1480, "unit": "aud_m", "period": "FY2025", "evidence_section": "Credit quality"},
+    {"metric_id": "traded_var", "value": 18.6, "unit": "aud_m", "period": "FY2025", "evidence_section": "Market risk"}
+  ]
+}

@@ -1,0 +1,110 @@
+[project]
+name = "finrisk-ai-lab"
+version = "0.1.0"
+description = "Portfolio monorepo: LLM-based risk metric extraction from annual reports, and an IFRS 9 PD model with a full validation suite."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "River He" }]
+dependencies = [
+    "annual-report-risk-rag",
+    "ifrs9-pd-model",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-cov>=6.0",
+    "ruff>=0.16,<0.17",
+    "mypy>=2.3,<3",
+    "pre-commit>=4.0",
+    "pandas-stubs>=2.2",
+    "scipy-stubs>=1.14; python_version >= '3.11'",
+]
+
+[tool.uv.workspace]
+members = ["projects/*"]
+
+[tool.uv.sources]
+annual-report-risk-rag = { workspace = true }
+ifrs9-pd-model = { workspace = true }
+
+# ---------------------------------------------------------------------------
+# Shared tooling configuration (inherited by every workspace member)
+# ---------------------------------------------------------------------------
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["projects/annual-report-risk-rag/src", "projects/ifrs9-pd-model/src"]
+
+[tool.ruff.lint]
+select = [
+    "E", "W",    # pycodestyle
+    "F",         # pyflakes
+    "I",         # isort
+    "B",         # bugbear
+    "UP",        # pyupgrade
+    "N",         # pep8-naming
+    "D",         # pydocstyle
+    "ANN",       # annotations
+    "S",         # bandit
+    "SIM",       # simplify
+    "RUF",       # ruff-specific
+    "PT",        # pytest style
+    "C4",        # comprehensions
+    "PL",        # pylint
+]
+ignore = [
+    "D100", "D104",          # module / package docstrings optional
+    "D203", "D213",          # conflicting pydocstyle rules
+    "D107",                  # __init__ args are documented in the class docstring (Google style)
+    "PLC0415",               # lazy imports gate optional dependencies / credentials
+    "ANN401",                # Any is sometimes needed at boundaries
+    "PLR0913",               # many-argument constructors are fine for configs
+    "PLR2004",               # magic numbers in numeric code are documented inline
+    "S101",                  # asserts are fine (tests + invariants)
+    "S311",                  # numpy RNG is not for cryptography
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = ["D", "ANN", "PLR", "S106"]
+"**/cli.py" = ["PLR0915"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+quote-style = "double"
+docstring-code-format = true
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+pretty = true
+show_error_codes = true
+mypy_path = "projects/annual-report-risk-rag/src:projects/ifrs9-pd-model/src"
+packages = ["report_rag", "ifrs9_pd"]
+
+[[tool.mypy.overrides]]
+module = ["sklearn.*", "matplotlib.*", "pypdf.*", "sentence_transformers.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["projects/annual-report-risk-rag/tests", "projects/ifrs9-pd-model/tests"]
+addopts = "-ra --strict-markers --strict-config --import-mode=importlib"
+markers = [
+    "slow: long-running tests (deselect with -m 'not slow')",
+    "integration: tests that need external services such as an API key",
+]
+filterwarnings = ["error::DeprecationWarning:report_rag.*", "error::DeprecationWarning:ifrs9_pd.*"]
+
+[tool.coverage.run]
+source = ["report_rag", "ifrs9_pd"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+fail_under = 85

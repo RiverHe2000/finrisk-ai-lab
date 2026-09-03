@@ -1,0 +1,17 @@
+{
+  "doc_id": "harbour_mutual_fy2025",
+  "labels": [
+    {"metric_id": "cet1_ratio", "value": 15.8, "unit": "percent", "period": "FY2025", "evidence_section": "Capital adequacy"},
+    {"metric_id": "tier1_ratio", "value": 15.8, "unit": "percent", "period": "FY2025", "evidence_section": "Capital adequacy"},
+    {"metric_id": "total_capital_ratio", "value": 17.6, "unit": "percent", "period": "FY2025", "evidence_section": "Capital adequacy"},
+    {"metric_id": "leverage_ratio", "value": null},
+    {"metric_id": "lcr", "value": null},
+    {"metric_id": "nsfr", "value": null},
+    {"metric_id": "rwa_total", "value": 3120, "unit": "aud_m", "period": "FY2025", "evidence_section": "Capital adequacy"},
+    {"metric_id": "npl_ratio", "value": 0.42, "unit": "percent", "period": "FY2025", "evidence_section": "Loan portfolio and credit quality"},
+    {"metric_id": "provision_coverage", "value": 0.71, "unit": "percent", "period": "FY2025", "evidence_section": "Loan portfolio and credit quality"},
+    {"metric_id": "loan_impairment_expense", "value": 3.9, "unit": "aud_m", "period": "FY2025", "evidence_section": "Loan portfolio and credit quality"},
+    {"metric_id": "stage3_ecl", "value": 4.1, "unit": "aud_m", "period": "FY2025", "evidence_section": "Loan portfolio and credit quality"},
+    {"metric_id": "traded_var", "value": null}
+  ]
+}
