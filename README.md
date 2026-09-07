@@ -56,7 +56,7 @@ finrisk-ai-lab/
 ## Quickstart
 
 ```bash
-git clone https://github.com/riverhe1001-lab/finrisk-ai-lab && cd finrisk-ai-lab
+git clone https://github.com/ChuanHe-PhD/finrisk-ai-lab && cd finrisk-ai-lab
 uv sync --all-packages           # Python >= 3.11, uv >= 0.5
 make check                       # ruff + mypy --strict + pytest (coverage gate 85 %)
 
@@ -80,7 +80,7 @@ CI, runs offline.
 
 ## About
 
-Built by River He, PhD candidate in Computer Science (LLMs) at UNSW, with a B.Sc./M.Sc. in
+Built by Chuan He, PhD candidate in Computer Science (LLMs) at UNSW, with a B.Sc./M.Sc. in
 Financial Engineering (risk management). The two projects are meant to be read together: the
 first shows how I build LLM systems that a risk function can audit, the second shows that I
 understand the models those functions own.

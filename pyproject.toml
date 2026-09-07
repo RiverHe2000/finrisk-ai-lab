@@ -5,7 +5,7 @@ description = "Portfolio monorepo: LLM-based risk metric extraction from annual 
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
-authors = [{ name = "River He" }]
+authors = [{ name = "Chuan He" }]
 dependencies = [
     "annual-report-risk-rag",
     "ifrs9-pd-model",
