@@ -56,7 +56,7 @@ finrisk-ai-lab/
 ## Quickstart
 
 ```bash
-git clone https://github.com/ChuanHe-PhD/finrisk-ai-lab && cd finrisk-ai-lab
+git clone https://github.com/RiverHe2000/finrisk-ai-lab && cd finrisk-ai-lab
 uv sync --all-packages           # Python >= 3.11, uv >= 0.5
 make check                       # ruff + mypy --strict + pytest (coverage gate 85 %)
 
