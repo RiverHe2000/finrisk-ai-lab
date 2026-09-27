@@ -198,7 +198,7 @@ No seed, threshold, window or candidate was changed after viewing this result.
 Reproduce the committed candidate without changing historical reports:
 
 ```bash
-uv run ifrs9-pd remediation-evaluate \
+uv run --python 3.12 ifrs9-pd remediation-evaluate \
   --source-dir projects/ifrs9-pd-model/reports \
   --protocol projects/ifrs9-pd-model/docs/REMEDIATION_PROTOCOL.md \
   --frozen projects/ifrs9-pd-model/reports/remediation-v1/frozen_candidate.json \
@@ -212,6 +212,13 @@ The generated assessment receipt hashes all selected rows and outcomes; JSON als
 runtime versions, calibration tests, stage migration and scenario sensitivities. The hash
 serialisation uses LF, dates as YYYY-MM-DD and floats at 12 significant digits. Identical
 replays assess reproducibility; they do not constitute fresh experiments.
+
+Replay uses the study's Python 3.12 lockfile branch: NumPy 2.5.2, pandas 3.0.5,
+SciPy 1.18.1 and scikit-learn 1.9.0. The first Linux report job selected Python 3.11
+with older NumPy/SciPy versions and correctly stopped at a calibration-data hash
+mismatch. CI now selects Python 3.12 explicitly for report reproduction; package
+tests still cover Python 3.11, 3.12 and 3.13. The frozen receipt, thresholds and
+strict data hash check are unchanged.
 
 The disposition is to investigate calibration shape by grade and macro regime before
 proposing another version, then reserve a fresh assessment window. This used window must

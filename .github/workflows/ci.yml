@@ -67,6 +67,8 @@ jobs:
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
+          # Match the frozen study's numerical dependency branch in uv.lock.
+          python-version: "3.12"
       - name: Install
         run: uv sync --all-packages
       - name: Regenerate IFRS 9 validation report and RAG evaluation
