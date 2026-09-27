@@ -14,16 +14,22 @@ Python versions.
 
 | | Metric | Value |
 |---|---|---|
-| RAG baseline | Micro-F1 vs gold labels, 2 synthetic reports x 12 metrics | 0.947 (precision 1.00) |
-| RAG baseline | Grounding rate of accepted values | 100 % |
+| RAG baseline, revised evidence checks | Micro-F1 vs gold labels, 2 synthetic reports x 12 metrics | 0.788 (precision 1.00; 13 accepted gold matches) |
+| RAG baseline, revised evidence checks | Candidate acceptance rate (not independent correctness) | 13 / 19 found candidates; 7 of 20 disclosed gold values missed |
 | IFRS 9 PD | Gini, development / out-of-time | 0.739 / 0.723 |
 | IFRS 9 PD | KS, development / out-of-time | 0.593 / 0.577 |
 | IFRS 9 PD | Score PSI (dev vs OOT) | 0.004 |
-| IFRS 9 PD | Stage 1 / 2 / 3 share of exposure | 94.0 % / 5.6 % / 0.3 % of loans, ECL coverage 1.02 % |
+| IFRS 9 PD | Stage 1 / 2 / 3 share of loans | 94.0 % / 5.6 % / 0.3 % of loans, ECL coverage 1.02 % |
 | IFRS 9 PD | Out-of-time calibration (HL p-value, mean PD / observed DR) | 0.003 / 0.76, flagged **RED** by the validation suite |
 
 Reports: [`eval_rules.md`](projects/annual-report-risk-rag/reports/eval_rules.md) and
 [`validation_report.md`](projects/ifrs9-pd-model/reports/validation_report.md).
+
+Start with the [evidence review](docs/EVIDENCE_REVIEW.md): what changed in the
+RAG validator, the adversarial cases it now rejects, and the remaining scope.
+The former 0.947 RAG result is preserved as a **historical, superseded**
+[v1 report](projects/annual-report-risk-rag/reports/eval_rules_legacy_v1.md).
+The stricter result retains abstentions; no live LLM benchmark was rerun.
 
 The committed IFRS 9 report deliberately rates the model **RED**: discrimination and stability
 are green, but the out-of-time window shows under-prediction, and the suite turns that into a

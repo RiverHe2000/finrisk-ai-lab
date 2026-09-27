@@ -15,8 +15,10 @@ Risk, finance and model-validation teams spend a lot of analyst time pulling the
 numbers out of hundreds of pages of PDF. An LLM can do it in seconds, but a bank cannot use a
 number it cannot audit. The design goal here is therefore *not* "extract as much as possible" but
 "never accept a value without evidence": every extraction carries the sentence it came from and
-the chunk id, and the validator independently checks that (a) the sentence really is in that
-chunk, (b) the number really is in that sentence, and (c) the value is plausible for the metric.
+the chunk id, and the validator checks that the excerpt is in that chunk, a complete signed
+number has an explicit adjacent unit and a preceding metric alias, and any claimed period
+is explicit and unambiguous. A later figure cannot be borrowed from another metric or
+comparison. These conservative checks are not a general semantic entailment proof.
 
 ## Architecture
 
@@ -107,11 +109,16 @@ you want scores, a matching `data/gold/<doc_id>.json`.
 | Retrieval recall@k | Share of disclosed metrics whose gold section appears in the top-k chunks |
 | Grounding rate | Share of `found=true` extractions the validator could fully verify |
 
-The baseline gets micro-F1 0.947 with 100 % precision; its two misses are instructive:
-in one report it reads "90" out of "90 or more days past due" for the NPL ratio and the
-range check rejects it, in the other it does not recognise the phrasing at all. Those are
-exactly the cases a language model is expected to handle, and the harness is built so that an
-LLM run can be dropped in as a second column (`--extractor llm`) and compared.
+The revised offline baseline gets micro-F1 **0.788**, precision **1.000**, and recall
+**0.650** over the 20 disclosed gold values: 13 matches and 7 abstentions/misses. It rejects
+a day count misread as a percentage, ambiguous multi-year quotes and metric associations
+that it cannot verify. The rule extractor can quote a verbatim first clause before an
+explicitly marked comparison; it does not infer table-column periods. Candidate acceptance
+(13/19) is a validator outcome, not an independent accuracy metric.
+
+The [old v1 evaluation](reports/eval_rules_legacy_v1.md) is retained for historical comparison;
+its 0.947 F1 and grounding claims do not validate the revised checks. See the
+[review and reproduction note](../../docs/EVIDENCE_REVIEW.md). No new live-model result is claimed.
 
 ## Design notes
 
@@ -135,4 +142,8 @@ LLM run can be dropped in as a second column (`--extractor llm`) and compared.
 * The LLM and agent paths are covered by unit tests with stubs, not by a live evaluation in CI
   (no credentials in CI by design). A `make rag-eval-llm` target that records model, prompt hash
   and cost alongside the metrics is the obvious next addition.
-* Period handling is best-effort; multi-year tables are a known weak spot for the baseline.
+* Claimed periods must be explicit and unambiguous; multi-year quotes are rejected. Missing
+  periods remain missing. Annual `FY2025` and `2025` are treated as the same label; this does
+  not establish fiscal year-end conventions. Half-years remain distinct.
+* Metric aliases and adjacent units are deliberately conservative. Complex tables, unknown
+  synonyms, denominator mentions and multi-clause prose can be rejected even when correct.

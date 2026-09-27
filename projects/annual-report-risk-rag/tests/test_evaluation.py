@@ -28,10 +28,11 @@ def test_score_report_confusion_matrix(southern_cross: Document, settings: Setti
     summary = score_report(report, gold, {c.chunk_id: c.section for c in chunks})
     by_id = {o.metric_id: o for o in summary.outcomes}
     assert by_id["cet1_ratio"].outcome is Outcome.TP
-    assert by_id["npl_ratio"].outcome is Outcome.FN  # rejected by the range check
+    assert by_id["npl_ratio"].outcome is Outcome.FN  # a day count is not a percent value
     assert summary.tp + summary.fp + summary.fn + summary.tn == summary.n_metrics == 12
     assert summary.precision == 1.0
-    assert 0.9 <= summary.recall < 1.0
+    # Strict evidence checks abstain on the two ambiguous multi-period quotes.
+    assert summary.recall == pytest.approx(9 / 12)
     assert summary.retrieval_recall_at_k == 1.0
     assert summary.grounding_rate is not None
     assert summary.mean_abs_error == 0.0
@@ -57,7 +58,7 @@ def test_evaluate_corpus_and_render(settings: Settings, tmp_path: Path) -> None:
         "southern_cross_bank_fy2025",
         "harbour_mutual_fy2025",
     }
-    assert 0.8 <= run.micro_f1 <= 1.0
+    assert run.micro_f1 == pytest.approx(26 / 33)  # 13 accepted gold matches, 7 abstentions
     assert 0.0 <= run.macro_f1 <= 1.0
     md = render_markdown(run)
     assert md.startswith("# Extraction evaluation - extractor `rules`")

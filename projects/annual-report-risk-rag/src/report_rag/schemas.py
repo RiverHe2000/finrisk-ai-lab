@@ -99,6 +99,9 @@ class GroundingStatus(StrEnum):
     GROUNDED = "grounded"
     QUOTE_NOT_IN_CHUNK = "quote_not_in_chunk"
     VALUE_NOT_IN_QUOTE = "value_not_in_quote"
+    METRIC_NOT_VERIFIED = "metric_not_verified"
+    UNIT_NOT_VERIFIED = "unit_not_verified"
+    PERIOD_NOT_VERIFIED = "period_not_verified"
     OUT_OF_RANGE = "out_of_range"
     NOT_FOUND = "not_found"
 

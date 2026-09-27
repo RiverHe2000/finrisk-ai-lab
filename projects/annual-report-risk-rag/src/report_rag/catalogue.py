@@ -16,7 +16,12 @@ RISK_METRICS: tuple[MetricSpec, ...] = (
         description="CET1 capital as a percentage of total risk-weighted assets (Level 2).",
         unit=Unit.PERCENT,
         query="Common Equity Tier 1 CET1 capital ratio percent risk-weighted assets",
-        aliases=("CET1 ratio", "CET1 capital ratio", "Common Equity Tier 1 ratio"),
+        aliases=(
+            "CET1 ratio",
+            "CET1 capital ratio",
+            "Common Equity Tier 1 ratio",
+            "Common Equity Tier 1 (CET1) ratio",
+        ),
         typical_range=(4.5, 25.0),
     ),
     MetricSpec(

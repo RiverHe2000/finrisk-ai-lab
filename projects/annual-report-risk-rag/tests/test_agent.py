@@ -34,7 +34,7 @@ def _submit_from_search(conversation: Conversation) -> AssistantTurn:
                                 "value": 12.4,
                                 "unit": "percent",
                                 "period": "FY2025",
-                                "evidence_quote": sentence,
+                                "evidence_quote": sentence.split(", compared with")[0],
                                 "chunk_id": ex["chunk_id"],
                                 "confidence": 0.9,
                             },

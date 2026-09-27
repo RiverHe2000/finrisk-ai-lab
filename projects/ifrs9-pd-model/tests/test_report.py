@@ -39,12 +39,11 @@ def test_results_json_loads(results, run_dir):
     assert loaded.samples["oot"].gini == round(results.samples["oot"].gini, 6)
 
 
-def test_rebuild_report_elsewhere(results, tmp_path):
+def test_rebuild_report_elsewhere(results, run_dir, tmp_path):
     path = build_validation_report(results, tmp_path / "again")
     assert path.exists()
-    assert (
-        path.read_text(encoding="utf-8")
-        == (path.parent.parent / "again" / "validation_report.md").read_text()
+    assert path.read_text(encoding="utf-8") == (run_dir / "validation_report.md").read_text(
+        encoding="utf-8"
     )
 
 

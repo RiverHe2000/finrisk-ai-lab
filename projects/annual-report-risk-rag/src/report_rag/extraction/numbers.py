@@ -6,7 +6,8 @@ import re
 
 from report_rag.schemas import Unit
 
-NUMBER_RE = re.compile(r"(?<![\w.])(-?\(?\$?\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+(?:\.\d+)?)\)?")
+_MAGNITUDE = r"(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?"
+NUMBER_RE = re.compile(rf"(?<![\w.,])(?:\(\$?{_MAGNITUDE}\)|-?\$?{_MAGNITUDE})(?!\w|\.\d|,\d)")
 PERIOD_RE = re.compile(r"\b(FY\s?20\d{2}|(?:1H|2H)\s?20\d{2}|20\d{2})\b", re.IGNORECASE)
 SENTENCE_SPLIT_RE = re.compile(r"(?<=[.;])\s+(?=[A-Z(\"'])")
 

@@ -28,6 +28,11 @@ _COMPATIBLE: dict[Unit, frozenset[Unit]] = {
     Unit.TIMES: frozenset({Unit.RATIO, Unit.TIMES}),
 }
 
+_COMPARISON_RE = re.compile(
+    r",\s*(?:compared with|up from)|\(\s*(?:FY\s*)?20\d{2}|\s+from\s+\$?\d",
+    re.IGNORECASE,
+)
+
 
 class RuleBasedExtractor:
     """Find the first sentence mentioning a metric alias and read the number after it."""
@@ -46,13 +51,16 @@ class RuleBasedExtractor:
                 if candidate is None:
                     continue
                 value, unit = candidate
+                # Quote only the first fact, before an explicitly marked comparison.
+                # This is still a verbatim excerpt; multi-year tables are not inferred.
+                evidence = _COMPARISON_RE.split(sentence, maxsplit=1)[0].strip()
                 return ExtractedMetric(
                     metric_id=spec.metric_id,
                     found=True,
                     value=value,
                     unit=unit,
-                    period=find_period(sentence) or find_period(chunk.section),
-                    evidence_quote=sentence.strip(),
+                    period=find_period(evidence),
+                    evidence_quote=evidence,
                     chunk_id=chunk.chunk_id,
                     confidence=0.5,
                     notes="rule-based extraction",

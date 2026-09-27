@@ -23,9 +23,9 @@ def test_rules_pipeline_extracts_capital_ratios(
     assert accepted["lcr"].value == 134
     assert accepted["rwa_total"].value == 215640
     assert accepted["stage3_ecl"].value == 1480
-    # The baseline grabs "90" from "90 or more days past due"; the range check rejects it.
+    # The baseline grabs "90" from "90 or more days past due"; no adjacent unit supports it.
     npl = next(r for r in report.results if r.metric.metric_id == "npl_ratio")
-    assert npl.grounding is GroundingStatus.OUT_OF_RANGE
+    assert npl.grounding is GroundingStatus.UNIT_NOT_VERIFIED
     assert not npl.accepted
 
 
@@ -46,7 +46,7 @@ def test_llm_pipeline_grounds_stub_output(southern_cross: Document, settings: Se
         southern_cross
     )
     hit = retriever.retrieve(spec.query, top_k=1)[0].chunk
-    good_quote = next(s for s in hit.text.split(". ") if "12.4%" in s)
+    good_quote = next(s for s in hit.text.split(". ") if "12.4%" in s).split(", compared with")[0]
     stub = StubStructuredLLM(
         [
             {
