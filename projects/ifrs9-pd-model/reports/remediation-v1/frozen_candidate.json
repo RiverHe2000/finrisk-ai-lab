@@ -1,0 +1,220 @@
+{
+  "payload": {
+    "added_logit_shift": 0.2566417858414378,
+    "assessment_data": {
+      "dev_cutoff": "2022-06",
+      "last_snapshot": "2025-12",
+      "missing_rate": 0.015,
+      "n_loans": 30000,
+      "origination_end": "2025-12",
+      "origination_start": "2017-01",
+      "seed": 20250927,
+      "target_default_rate": 0.025
+    },
+    "assessment_start": "2025-01",
+    "baseline_commit": "e45f526c8f003483c44431844431f92a6db26c58",
+    "calibration": {
+      "baseline_mean_pit_pd": 0.012839968969653557,
+      "candidate_mean_pit_pd": 0.01691305437233776,
+      "default_rate": 0.01691305437233776,
+      "defaults": 135,
+      "first_snapshot": "2022-07",
+      "frame_sha256": "587e08281a21d8fa50c895e614746661680d04d8cdcc3baf386255b1a07f9f5a",
+      "last_snapshot": "2023-12",
+      "latest_label_maturity": "2024-12",
+      "n_rows": 8010,
+      "performing_rows": 7982,
+      "serialisation": "CSV; LF; floats %.12g; dates YYYY-MM-DD; original column order"
+    },
+    "candidate_scorecard": {
+      "calibration_shift": 0.1863161245212829,
+      "coef": [
+        -0.9039556516177469,
+        -0.5091168229335075,
+        -0.9958085098390209,
+        -1.0400759190757056,
+        -0.45630148845974333,
+        -1.0068469258446526,
+        -0.8805950634248133,
+        -0.9754684063773277
+      ],
+      "config": {
+        "asset_correlation": 0.15,
+        "base_odds": 50.0,
+        "base_score": 600.0,
+        "grade_max_pd": 0.3,
+        "grade_min_pd": 0.0003,
+        "max_iv": null,
+        "min_bin_share": 0.01,
+        "min_iv": 0.02,
+        "n_bins": 10,
+        "n_grades": 10,
+        "pdo": 20.0,
+        "regularisation_c": 1.0
+      },
+      "factor_loading": 0.5393894253292897,
+      "features": [
+        "bureau_score",
+        "arrears_history_12m",
+        "loan_to_value",
+        "debt_to_income",
+        "current_dpd",
+        "employment_type",
+        "months_on_book",
+        "utilisation"
+      ],
+      "intercept": -3.5529122735972716
+    },
+    "limits": {
+      "binomial_p_min": 0.05,
+      "defaults_min": 50.0,
+      "gini_drop_max": 0.05,
+      "gini_min": 0.5,
+      "hl_p_min": 0.05,
+      "ks_min": 0.3,
+      "pd_dr_max": 1.2,
+      "pd_dr_min": 0.85,
+      "score_psi_max": 0.1
+    },
+    "macro_cutoff": "2023-12",
+    "macro_mean": 5.1223125,
+    "macro_std": 0.8710738842613209,
+    "pipeline_config": {
+      "data": {
+        "dev_cutoff": "2022-06",
+        "last_snapshot": "2023-12",
+        "missing_rate": 0.015,
+        "n_loans": 20000,
+        "origination_end": "2023-12",
+        "origination_start": "2017-01",
+        "seed": 42,
+        "target_default_rate": 0.025
+      },
+      "ecl": {
+        "discount_rate": 0.05,
+        "horizon_months": 60,
+        "lgd": 0.35,
+        "lgd_by_segment": {},
+        "mean_reversion": 0.05,
+        "peak_month": 24,
+        "peak_multiplier": 1.4
+      },
+      "model": {
+        "asset_correlation": 0.15,
+        "base_odds": 50.0,
+        "base_score": 600.0,
+        "grade_max_pd": 0.3,
+        "grade_min_pd": 0.0003,
+        "max_iv": null,
+        "min_bin_share": 0.01,
+        "min_iv": 0.02,
+        "n_bins": 10,
+        "n_grades": 10,
+        "pdo": 20.0,
+        "regularisation_c": 1.0
+      },
+      "scenarios": {
+        "weights": {
+          "base": 0.5,
+          "downside": 0.25,
+          "upside": 0.25
+        },
+        "z_shifts": {
+          "base": 0.0,
+          "downside": -1.5,
+          "upside": 1.0
+        }
+      },
+      "staging": {
+        "absolute_pd_threshold_bps": 50.0,
+        "default_dpd": 90,
+        "dpd_backstop": 30,
+        "relative_pd_threshold": 2.0
+      },
+      "thresholds": {
+        "binomial_p_value": {
+          "amber": 0.01,
+          "green": 0.05,
+          "higher_is_better": true
+        },
+        "gini": {
+          "amber": 0.4,
+          "green": 0.5,
+          "higher_is_better": true
+        },
+        "gini_deterioration": {
+          "amber": 0.1,
+          "green": 0.05,
+          "higher_is_better": false
+        },
+        "hl_p_value": {
+          "amber": 0.01,
+          "green": 0.05,
+          "higher_is_better": true
+        },
+        "ks": {
+          "amber": 0.2,
+          "green": 0.3,
+          "higher_is_better": true
+        },
+        "pd_to_dr_ratio": {
+          "amber": 0.7,
+          "green": 0.85,
+          "higher_is_better": true
+        },
+        "psi": {
+          "amber": 0.25,
+          "green": 0.1,
+          "higher_is_better": false
+        }
+      }
+    },
+    "protocol_sha256": "6065b376718f0d108062d1162fe8951e3a4091784bbafe622ec2556dc69ecc95",
+    "protocol_version": "synthetic_intercept_remediation_v1",
+    "reference_scorecard": {
+      "calibration_shift": -0.07032566132015491,
+      "coef": [
+        -0.9039556516177469,
+        -0.5091168229335075,
+        -0.9958085098390209,
+        -1.0400759190757056,
+        -0.45630148845974333,
+        -1.0068469258446526,
+        -0.8805950634248133,
+        -0.9754684063773277
+      ],
+      "config": {
+        "asset_correlation": 0.15,
+        "base_odds": 50.0,
+        "base_score": 600.0,
+        "grade_max_pd": 0.3,
+        "grade_min_pd": 0.0003,
+        "max_iv": null,
+        "min_bin_share": 0.01,
+        "min_iv": 0.02,
+        "n_bins": 10,
+        "n_grades": 10,
+        "pdo": 20.0,
+        "regularisation_c": 1.0
+      },
+      "factor_loading": 0.5393894253292897,
+      "features": [
+        "bureau_score",
+        "arrears_history_12m",
+        "loan_to_value",
+        "debt_to_income",
+        "current_dpd",
+        "employment_type",
+        "months_on_book",
+        "utilisation"
+      ],
+      "intercept": -3.5529122735972716
+    },
+    "source_hashes": {
+      "scorecard.json": "5fd48e03425b4992f6c211f7323d44a28269712163c0ed7919fd317e18798560",
+      "validation_report.md": "6be0ee527da47ae0eca2cd6e9185277ae1e4d84911801d316517e2bf03a9b769",
+      "validation_results.json": "c00e996a9b7486a696fba2a8d8b6571ab145ad2ed02adaaa9be26eb098bd491d"
+    }
+  },
+  "sha256": "949c44f9040745e4c4aec47fe3cc762a4a670f4d80215748a43a56cb41fa9d49"
+}

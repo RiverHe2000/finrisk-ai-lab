@@ -157,5 +157,32 @@ def show_scorecard(
     )
 
 
+@app.command("remediation-prepare")
+def remediation_prepare(
+    source_dir: Annotated[Path, typer.Option(help="Original immutable reports directory.")],
+    protocol: Annotated[Path, typer.Option(help="Frozen protocol Markdown file.")],
+    output: Annotated[Path, typer.Option(help="New frozen candidate receipt; must not exist.")],
+) -> None:
+    """Prepare a calibration-only candidate before generating any new assessment data."""
+    from ifrs9_pd.remediation import prepare_remediation
+
+    frozen = prepare_remediation(source_dir, protocol, output)
+    console.print(f"Frozen candidate: {output}; added logit shift {frozen.added_logit_shift:.6f}")
+
+
+@app.command("remediation-evaluate")
+def remediation_evaluate(
+    source_dir: Annotated[Path, typer.Option(help="Original immutable reports directory.")],
+    protocol: Annotated[Path, typer.Option(help="Protocol committed before assessment.")],
+    frozen: Annotated[Path, typer.Option(help="Prepared and committed candidate receipt.")],
+    output_dir: Annotated[Path, typer.Option(help="Separate new assessment directory.")],
+) -> None:
+    """Evaluate the sealed candidate on its predeclared synthetic future window."""
+    from ifrs9_pd.remediation import evaluate_remediation
+
+    result = evaluate_remediation(frozen, source_dir, protocol, output_dir)
+    console.print(f"Remediation decision: {result['decision']}; original report remains RED")
+
+
 if __name__ == "__main__":  # pragma: no cover
     app()
