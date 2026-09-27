@@ -10,8 +10,11 @@ synthetic model-validation study. Neither is an observed production outcome.
   13 accepted values match gold, seven disclosed values are missed, and precision is 1.000
   on this small fixture. Micro-F1 is 0.788. Lower recall is retained after stricter checks.
 - [IFRS9 validation report](../projects/ifrs9-pd-model/reports/validation_report.md):
-  the original RED calibration finding remains unchanged. No recalibration or fresh
-  out-of-time result was manufactured during this review.
+  the original RED calibration finding remains unchanged. A subsequent, separately
+  [frozen remediation study](../projects/ifrs9-pd-model/docs/REMEDIATION_PROTOCOL.md)
+  now reports a new synthetic 2025 assessment: candidate not accepted, finding OPEN.
+  It repairs the comparison arms' macro preprocessing look-ahead, preserves the
+  negative result, and reports conditional ECL impact on the same book.
 - [Adversarial evidence tests](../projects/annual-report-risk-rag/tests/test_grounding.py):
   decimal truncation, sign changes, Unicode/separated minus signs, wrong units, wrong periods,
   half-year mismatches, another metric's value and an unknown metric in a later clause.

@@ -21,6 +21,8 @@ Python versions.
 | IFRS 9 PD | Score PSI (dev vs OOT) | 0.004 |
 | IFRS 9 PD | Stage 1 / 2 / 3 share of loans | 94.0 % / 5.6 % / 0.3 % of loans, ECL coverage 1.02 % |
 | IFRS 9 PD | Out-of-time calibration (HL p-value, mean PD / observed DR) | 0.003 / 0.76, flagged **RED** by the validation suite |
+| IFRS 9 remediation, separate synthetic 2025 window | Frozen intercept candidate | **Not accepted / finding OPEN**: HL p = 0.000645, PD/DR = 1.228 exceeds frozen 1.20 cap |
+| IFRS 9 remediation, same $2.953bn book | Conditional ECL impact | $34.19m -> $41.09m; +$6.90m, assumptions unchanged |
 
 Reports: [`eval_rules.md`](projects/annual-report-risk-rag/reports/eval_rules.md) and
 [`validation_report.md`](projects/ifrs9-pd-model/reports/validation_report.md).
@@ -33,9 +35,14 @@ The stricter result retains abstentions; no live LLM benchmark was rerun.
 
 The committed IFRS 9 report deliberately rates the model **RED**: discrimination and stability
 are green, but the out-of-time window shows under-prediction, and the suite turns that into a
-high-severity finding with a recalibration recommendation. That is the point of an independent
-validation layer; the project README explains the root cause and shows that other seeds rate
-green with the same code.
+high-severity finding with a recalibration recommendation. The separate
+[remediation assessment](projects/ifrs9-pd-model/reports/remediation-v1/assessment.md)
+then freezes a proposed correction, repairs macro look-ahead in its comparison arms,
+and tests a new synthetic time window. The candidate still fails two predeclared gates:
+the finding remains open and the candidate is not accepted. The
+[protocol](projects/ifrs9-pd-model/docs/REMEDIATION_PROTOCOL.md) and frozen candidate were
+committed before that window was generated. This demonstrates a traceable disposition,
+not a claim that recalibration must make every validation pass.
 
 ## Repository layout
 

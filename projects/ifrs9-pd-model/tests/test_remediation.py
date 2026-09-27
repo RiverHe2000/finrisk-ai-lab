@@ -153,3 +153,76 @@ def test_assessment_rejects_earlier_book(receipt, portfolio):
     _, frozen = receipt
     with pytest.raises(ValueError, match="outside"):
         remediation.assess_remediation(frozen, SOURCE, portfolio)
+
+
+def test_assessment_labels_never_change_candidate_or_ecl(receipt, portfolio, monkeypatch):
+    _, frozen = receipt
+    payload_before = frozen.model_dump(mode="json")
+    book = portfolio.iloc[:1000].copy()
+    book[Col.SNAPSHOT_DATE.value] = pd.Timestamp("2025-01-01")
+    book[Col.LOAN_ID.value] = "assessment-20250927-" + book[Col.LOAN_ID.value]
+    monkeypatch.setattr(
+        remediation, "calibrate_intercept", lambda *a, **k: pytest.fail("must not fit")
+    )
+    monkeypatch.setattr(
+        remediation, "fit_factor_loading", lambda *a, **k: pytest.fail("must not fit")
+    )
+    first = remediation.assess_remediation(frozen, SOURCE, book)
+    book[Col.DEFAULT_12M.value] = 1 - book[Col.DEFAULT_12M.value]
+    second = remediation.assess_remediation(frozen, SOURCE, book)
+    assert frozen.model_dump(mode="json") == payload_before
+    assert first["ecl_impact"] == second["ecl_impact"]
+    assert first["frozen_payload_sha256"] == second["frozen_payload_sha256"]
+    assert first["metrics"]["candidate"]["mean_pd"] == second["metrics"]["candidate"]["mean_pd"]
+    assert first["metrics"]["candidate"]["defaults"] != second["metrics"]["candidate"]["defaults"]
+
+
+def test_changed_source_and_duplicate_ids_are_rejected(receipt, tmp_path, portfolio):
+    path, frozen = receipt
+    for filename in frozen.source_hashes:
+        (tmp_path / filename).write_text(
+            (SOURCE / filename).read_text(encoding="utf-8"), encoding="utf-8"
+        )
+    (tmp_path / "scorecard.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(ValueError, match="Original artifact changed"):
+        remediation.load_frozen(path, tmp_path, PROTOCOL)
+    book = portfolio.iloc[:2].copy()
+    book[Col.SNAPSHOT_DATE.value] = pd.Timestamp("2025-01-01")
+    book[Col.LOAN_ID.value] = "assessment-20250927-duplicate"
+    with pytest.raises(ValueError, match="IDs must be unique"):
+        remediation.assess_remediation(frozen, SOURCE, book)
+
+
+def test_evaluate_cli_writes_report_without_altering_frozen(
+    receipt, tmp_path, portfolio, monkeypatch
+):
+    path, frozen = receipt
+    original_bytes = path.read_bytes()
+    book = portfolio.iloc[:1000].copy()
+    book[Col.SNAPSHOT_DATE.value] = pd.Timestamp("2025-01-01")
+    book[Col.LOAN_ID.value] = "assessment-20250927-" + book[Col.LOAN_ID.value]
+    monkeypatch.setattr(remediation, "generate_assessment", lambda _: book)
+    result = CliRunner().invoke(
+        app,
+        [
+            "remediation-evaluate",
+            "--source-dir",
+            str(SOURCE),
+            "--protocol",
+            str(PROTOCOL),
+            "--frozen",
+            str(path),
+            "--output-dir",
+            str(tmp_path),
+        ],
+    )
+    assert result.exit_code == 0, result.output
+    saved = json.loads((tmp_path / "assessment.json").read_text(encoding="utf-8"))
+    assert saved["assessment"]["n_rows"] == 1000
+    assert "Original report: RED, unchanged" in (tmp_path / "assessment.md").read_text(
+        encoding="utf-8"
+    )
+    assert path.read_bytes() == original_bytes
+    assert saved["frozen_payload_sha256"] == remediation.canonical_digest(
+        frozen.model_dump(mode="json")
+    )

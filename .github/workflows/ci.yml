@@ -73,6 +73,13 @@ jobs:
         run: |
           uv run ifrs9-pd run-all --output-dir /tmp/pd-out
           uv run report-rag evaluate --extractor rules --output /tmp/eval_rules.md
+      - name: Replay frozen synthetic remediation assessment
+        run: |
+          uv run ifrs9-pd remediation-evaluate \
+            --source-dir projects/ifrs9-pd-model/reports \
+            --protocol projects/ifrs9-pd-model/docs/REMEDIATION_PROTOCOL.md \
+            --frozen projects/ifrs9-pd-model/reports/remediation-v1/frozen_candidate.json \
+            --output-dir /tmp/remediation-out
       - name: Publish as workflow artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -80,3 +87,4 @@ jobs:
           path: |
             /tmp/pd-out
             /tmp/eval_rules.md
+            /tmp/remediation-out

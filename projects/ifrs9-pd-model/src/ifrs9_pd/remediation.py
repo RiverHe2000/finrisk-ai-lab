@@ -308,6 +308,9 @@ def assess_remediation(
         "limits": frozen.limits,
         "checks": checks,
         "decision": "CLOSED_IN_SIMULATION" if all(checks.values()) else "OPEN",
+        "candidate_disposition": "eligible_for_further_research"
+        if all(checks.values())
+        else "not_accepted",
         "ecl_impact": ecl_impact(baseline, candidate, book, cfg),
         "original_report_rating": "RED (unchanged)",
     }
@@ -321,6 +324,7 @@ def render_remediation(result: dict[str, Any]) -> str:
         "# Synthetic IFRS 9 remediation assessment v1",
         "",
         f"**Decision: {result['decision']}. Original report: RED, unchanged.**",
+        f"Candidate disposition: **{result['candidate_disposition']}**.",
         "",
         "One frozen intercept correction, evaluated on one predeclared new synthetic window.",
         "This is not real-data external validation, independent expert review, "
@@ -335,8 +339,8 @@ def render_remediation(result: dict[str, Any]) -> str:
         "",
         "Both arms use macro mean/std frozen on 2016-01 to 2023-12. The reference retains the",
         "original scorecard ranking with a development-only overlay under this repaired transform;",
-        "it is not a replay of",
-        "the historical report's future-normalised macro path. Candidate parameters were fixed",
+        "it is not a replay of the historical report's future-normalised macro path.",
+        "Candidate parameters were fixed",
         "on the old OOT calibration sample before this new data pool was generated.",
         "",
         "| Metric | Reference | Candidate |",
@@ -389,6 +393,10 @@ def render_remediation(result: dict[str, Any]) -> str:
         "",
         "Failed checks remain open; do not choose another seed or tune against this window.",
         "The original RED finding is retained. See the frozen protocol for the numerical gates.",
+        "The next research action is to diagnose calibration shape by grade and macro regime;",
+        "an intercept-only correction cannot guarantee decile calibration. Any new candidate",
+        "needs a separately frozen protocol and fresh assessment data. This window is now used",
+        "and must not be advertised as untouched in follow-up model selection.",
         "JSON includes confidence intervals, grade tests, stage ECL and scenario sensitivities.",
         "LGD 35%, discount 5%, linear EAD, 60-month horizon and subjective scenario weights",
         "are assumptions. Origination PD is reconstructed at matched age. ECL changes measure",

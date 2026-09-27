@@ -164,6 +164,60 @@ recalibration recommendation, which is exactly what it is for. With other seeds
 (for example `--seed 7` or `--seed 123`) the same code rates green with no
 findings (OOT Gini 0.67 / 0.69, PD/DR 1.03 / 1.07).
 
+## Remediation and independent data split: synthetic 2025 assessment
+
+The original RED report above remains unchanged. A separate
+[frozen protocol](docs/REMEDIATION_PROTOCOL.md),
+[calibration receipt](reports/remediation-v1/frozen_candidate.json) and
+[new-window assessment](reports/remediation-v1/assessment.md) complete the chain from
+finding to proposed action, review and ECL impact. Protocol and candidate were committed
+at `f7da6c2` before the assessment pool was generated.
+
+The old OOT sample is explicitly reused as calibration data, with 12-month labels mature
+by December 2024. A single fixed seed generates a fresh 2025 snapshot window with 6,176
+loans (6,154 performing, 88 defaults); outcomes through December 2026 are simulated.
+This is a separate synthetic data split, not independent expert validation or real data.
+The legacy macro standardisation used the full future synthetic path. Both new comparison
+arms instead freeze macro mean/std through December 2023 and refit only the development
+overlay on old development rows. The candidate then adds one calibration-window intercept
+shift; original ranking coefficients and all ECL assumptions stay fixed.
+
+| Assessment | Reference | Candidate |
+|---|---:|---:|
+| Mean PD / observed default rate | 0.937 | 1.228 |
+| HL p-value | 0.000081 | 0.000645 |
+| Gini | 0.653 | 0.653 |
+| ECL on the identical $2.953bn book | $34.19m | $41.09m |
+
+**Candidate not accepted; calibration finding remains OPEN.** Its HL p-value misses the
+0.05 gate and PD/DR exceeds the predeclared 1.20 upper bound. The added ECL is $6.90m:
+$6.96m from PD curves with original stages held fixed, less $0.06m from additional stage
+changes. Larger ECL is a conditional sensitivity result, not evidence of improved accuracy.
+No seed, threshold, window or candidate was changed after viewing this result.
+
+Reproduce the committed candidate without changing historical reports:
+
+```bash
+uv run ifrs9-pd remediation-evaluate \
+  --source-dir projects/ifrs9-pd-model/reports \
+  --protocol projects/ifrs9-pd-model/docs/REMEDIATION_PROTOCOL.md \
+  --frozen projects/ifrs9-pd-model/reports/remediation-v1/frozen_candidate.json \
+  --output-dir projects/ifrs9-pd-model/artifacts/remediation-replay
+```
+
+`remediation-prepare` is a separate calibration-only command for reproducing the sealed
+candidate into a new path; it refuses overwrite. Assessment checks original artifact,
+protocol and calibration-data hashes before scoring. CI runs the frozen-candidate replay.
+The generated assessment receipt hashes all selected rows and outcomes; JSON also records
+runtime versions, calibration tests, stage migration and scenario sensitivities. The hash
+serialisation uses LF, dates as YYYY-MM-DD and floats at 12 significant digits. Identical
+replays assess reproducibility; they do not constitute fresh experiments.
+
+The disposition is to investigate calibration shape by grade and macro regime before
+proposing another version, then reserve a fresh assessment window. This used window must
+not be presented as untouched in a later model-selection exercise. LGD, EAD and lifetime
+assumptions below remain unvalidated.
+
 ## Design decisions worth knowing
 
 - **Scorecard vs overlay.** The scorecard ranks borrowers on their own
